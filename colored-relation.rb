@@ -5,12 +5,12 @@ Plugin.create(:colored_relation) do
   UserConfig[:protected_users_background_color] ||= [0xcccc,0xcccc,0xcccc]
 
   filter_message_background_color do | mp, array |
-    if mp.to_message.user[:protected] == true
+    if mp.message.user[:protected] == true
       array = UserConfig[:protected_users_background_color]
     else
       result = Service.any? { |me|
         x = Plugin[:followingcontrol].relation.followers[me.user_obj]
-        if x && x.any? { |you| you == mp.to_message.user }
+        if ! x.nil? && x && x.any? { |you| you == mp.message.user }
           array = UserConfig[:followed_users_background_color]
         end
       }
